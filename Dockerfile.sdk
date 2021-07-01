@@ -1,0 +1,13 @@
+FROM mcr.microsoft.com/dotnet/runtime:3.1-focal AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:3.1-focal AS build
+WORKDIR /src
+COPY ["threads.csproj", "./"]
+RUN dotnet restore "threads.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "threads.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "threads.csproj" -c Release -o /app/publish
